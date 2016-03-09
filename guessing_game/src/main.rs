@@ -1,4 +1,8 @@
 use std::io;
+use std::cmp::Ordering;
+use rand::Rng;
+
+extern crate rand;
 
 fn main() {
     println!("Guess!");

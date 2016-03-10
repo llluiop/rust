@@ -16,12 +16,16 @@
 > 声明时不初始化，如果下面不使用，会得到一个编译警告，如果使用那么会编译失败，不同于c/c++
 
 ##作用域和隐藏
-
-> fn main() {
->    let x: i32 = 17;
->    {
->        let y: i32 = 3;
->        println!("The value of x is {} and value of y is {}", x, y);
->    }
->    println!("The value of x is {} and value of y is {}", x, y); // This won't work
->}
+    //隐藏
+    fn main() {
+        let x: i32 = 17;
+        {
+            let y: i32 = 3;
+            println!("The value of x is {} and value of y is {}", x, y);
+        }
+        println!("The value of x is {} and value of y is {}", x, y); // This won't work
+    }
+    
+    //可变绑定，下一个y隐藏了上一个y
+    let y = 4;
+    let y = "I can also be bound to text!"; // y is now of a different type

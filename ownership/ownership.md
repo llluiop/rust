@@ -48,4 +48,36 @@ C++ 11使用std::move()实现了类似的语义，目的是实现高效，减少
 
 ##细节
 
+在移动了绑定后我们不能使用它的原因是微妙的，也是重要的。当我们写了这样的代码：
+
+    let v = vec![1, 2, 3];
+    let v2 = v;
     
+vec分配在堆上，v保存了一个指向他的指针，赋值后v2也保存了一个指向他的指针，此时按照rust的设计，为了禁止
+出现数据竞争，前者v的引用必须无效，这也是为什么有移动语义。
+
+##copy类型
+
+    let v = 1;
+    let v2 = v;
+
+    println!("v is: {}", v);
+    
+v是一个i32，它实现了Copy，而不是移动，所有的基础类型都默认实现了copy trait，*可以为自定义类型编写traits*。
+
+
+##函数的所有权
+
+    fn foo(v1: Vec<i32>, v2: Vec<i32>) -> (Vec<i32>, Vec<i32>, i32) {
+        // do stuff with v1 and v2
+
+        // hand back ownership, and the result of our function
+        (v1, v2, 42)  //函数返回值！！！
+    }
+
+    let v1 = vec![1, 2, 3];
+    let v2 = vec![1, 2, 3];
+
+    let (v1, v2, answer) = foo(v1, v2);     //重新得到所有权
+    
+**Rust 提供了一个 trait，借用，它帮助我们解决这个问题**。

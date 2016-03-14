@@ -1,0 +1,6 @@
+[package]
+name = "borrow"
+version = "0.1.0"
+authors = ["llluiop <290522165@163.com>"]
+
+[dependencies]

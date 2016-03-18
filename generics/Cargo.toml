@@ -1,0 +1,6 @@
+[package]
+name = "generics"
+version = "0.1.0"
+authors = ["Yu Liu <290522165@163.com>"]
+
+[dependencies]

@@ -1,5 +1,5 @@
 fn main() {
-    print_number(5);
+    foo(5);
 }
 
 fn print_number(x: i32) {
@@ -7,7 +7,9 @@ fn print_number(x: i32) {
 }
 
 fn foo(x: i32) -> i32 {
-    return x + 1;
+    x + 1
+    
+    //println!("x is: {}", x);  //error
 }
 
 fn foo2(x: i32) {

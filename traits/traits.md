@@ -17,7 +17,7 @@
 还记不记得generics那一章，print x编译报错的问题，就是这个原因，解决办法：
     
     trait HasArea {
-    fn area(&self) -> f64;
+        fn area(&self) -> f64;
     }
 
     struct Circle {
@@ -116,10 +116,119 @@
 > 带有trait限制的泛型函数是单态（monomorphization）（mono：单一，morph：形式）的，所以它是静态分发（statically dispatched）的
 
 
-##多 trait bound（Multiple trait bounds）
+##多trait bound（Multiple trait bounds）
 
     fn foo<T: Traits1 + Traits2>(x: T) {   //T =  Traits1 + Traits2
     }
+    
+    
+##where从句    
+
+    fn foo<T: Traits1 + Traits2>(x: T) {   
+    }
+    
+    ==>
+    
+    fn foo<T>(x: T) where T:Traits1 + Traits2  {  
+    }
+    
+    
+    更好的traits：
+    
+    trait ConvertTo<Output> {   //traits自身也可以是一个模板
+        fn convert(&self) -> Output;
+    }
+
+    impl ConvertTo<i64> for i32 {
+        fn convert(&self) -> i64 { *self as i64 }
+    }
+
+    // can be called with T == i32
+    fn normal<T: ConvertTo<i64>>(x: &T) -> i64 {
+        x.convert()
+    }
+
+    // can be called with T == i64
+    fn inverse<T>() -> T
+        // this is using ConvertTo as if it were "ConvertTo<i64>"
+        where i32: ConvertTo<T> {
+        42.convert()
+    }
+    
+    
+##默认方法
+
+    # trait Foo {
+    #     fn is_valid(&self) -> bool;   //必须实现
+    #
+    #     fn is_invalid(&self) -> bool { !self.is_valid() }  //默认实现
+    # }
+    struct UseDefault;
+
+    impl Foo for UseDefault {
+        fn is_valid(&self) -> bool {
+            println!("Called UseDefault.is_valid.");
+            true
+        }
+    }
+
+    struct OverrideDefault;
+
+    impl Foo for OverrideDefault {
+        fn is_valid(&self) -> bool {
+            println!("Called OverrideDefault.is_valid.");
+            true
+        }
+
+        fn is_invalid(&self) -> bool {   //覆盖默认实现
+            println!("Called OverrideDefault.is_invalid!");
+            true // overrides the expected value of is_invalid()
+        }
+    }
+
+    let default = UseDefault;
+    assert!(!default.is_invalid()); // prints "Called UseDefault.is_valid."
+
+    let over = OverrideDefault;
+    assert!(over.is_invalid()); // prints "Called OverrideDefault.is_invalid!"  
+    
+##继承
+
+ FooBar 的实现也必须实现 Foo ，像这样：
+
+    # trait Foo {
+    #     fn foo(&self);
+    # }
+    # trait FooBar : Foo {   //FooBar继承了Foo
+    #     fn foobar(&self);
+    # }
+    struct Baz;
+
+    impl Foo for Baz {      
+        fn foo(&self) { println!("foo"); }
+    }
+
+    impl FooBar for Baz {    //因为使用了FooBar，所以上面必须实现Foo
+        fn foobar(&self) { println!("foobar"); }
+    }
+
+
+    如果我们忘了实现 Foo ，Rust会告诉我们：
+    error: the trait `main::Foo` is not implemented for the type `main::Baz` [E0277]
+    
+##派生
+
+重复的实现像 Debug 和 Default 这样的 trait 会变得很无趣。为此，Rust 提供了一个属性来允许我们让 Rust 为我们自动实现 trait：
+
+    #[derive(Debug)]
+    struct Foo;
+
+    fn main() {
+        println!("{:?}", Foo);
+    }
+    
+      
+    
 
 
     

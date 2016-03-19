@@ -39,7 +39,7 @@ struct Rectangle<T> {
     height: T,
 }
 
-impl<T> Rectangle<T> {
+impl<T: PartialEq> Rectangle<T> {
     fn is_square(&self) -> bool {
         self.width == self.height
     }

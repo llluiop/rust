@@ -3,4 +3,9 @@ fn main() {
     let y = &x[..];
     
     let (a,b,c) = (1,2,3);
+    
+    let mut z = 5;
+    let zz = &mut z;
+    let p = *zz + 1;
+    println!("{}", p);
 }

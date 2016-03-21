@@ -4,7 +4,7 @@
 
 例如， + 运算符可以通过 Add 特性重载：
 
-    use std::ops::Add;  //可以重载的特性在ops里说明
+    use std::ops::Add;  //可以重载的特性在ops里说明，下面使用+号才会自动映射为add
 
     #[derive(Debug)]
     struct Point {

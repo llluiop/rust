@@ -1,10 +1,8 @@
 fn main() {
-    
+    let f = &&Foo;    
+    let ff = &f;
 
-    let f = &&Foo;
-
-    f.foo();
-    
+    ff.foo();    
     
     println!("Hello, world!");
 }

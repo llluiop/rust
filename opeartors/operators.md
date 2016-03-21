@@ -1,6 +1,6 @@
 #operators
 
-Rust 允许有限形式的运算符重载。特定的运算符可以被重载。要支持一个类型间特定的运算符，你可以实现一个的特定的重载运算符的trait。
+##Rust 允许有限形式的运算符重载。特定的运算符可以被重载。要支持一个类型间特定的运算符，你可以实现一个的特定的重载运算符的trait。
 
 例如， + 运算符可以通过 Add 特性重载：
 
@@ -46,18 +46,53 @@ Rust 允许有限形式的运算符重载。特定的运算符可以被重载。
 
 
 这里总共涉及到3个类型：你 impl Add 的类型， RHS ，它默认是 Self ，和 Output 。对于一个表达式 let z = x + y ， x 是 Self 类型的， y 是 RHS ，而 z 是 Self::Output 类型。
-# struct Point;
-# use std::ops::Add;
-impl Add<i32> for Point {
-    type Output = f64;
+    # struct Point;
+    # use std::ops::Add;
+    impl Add<i32> for Point {
+        type Output = f64;
 
-    fn add(self, rhs: i32) -> f64 {
-        // add an i32 to a Point and get an f64
-# 1.0
+        fn add(self, rhs: i32) -> f64 {
+            // add an i32 to a Point and get an f64
+    # 1.0
+        }
     }
-}
 
 
 将允许你这样做：
-let p: Point = // ...
-let x: f64 = p + 2i32;
+    let p: Point = // ...
+    let x: f64 = p + 2i32;
+
+
+
+##在泛型结构体中使用运算符 trait
+
+现在我们知道了运算符 trait 是如何定义的了，我们可以更通用的定义来自trait 章节的 HasArea  trait 和 Square 结构体：
+    use std::ops::Mul;
+
+    trait HasArea<T> {
+        fn area(&self) -> T;
+    }
+
+    struct Square<T> {
+        x: T,
+        y: T,
+        side: T,
+    }
+
+    impl<T> HasArea<T> for Square<T>  //HasArea的一个重载实现
+            where T: Mul<Output=T> + Copy {
+        fn area(&self) -> T {
+            self.side * self.side
+        }
+    }
+
+    fn main() {
+        let s = Square {
+            x: 0.0f64,
+            y: 0.0f64,
+            side: 12.0f64,
+        };
+
+        println!("Area of s: {}", s.area());
+    }
+

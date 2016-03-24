@@ -8,4 +8,7 @@ fn main() {
     let zz = &mut z;
     let p = *zz + 1;
     println!("{}", p);
+    
+    let test;
+    test = 5;
 }
